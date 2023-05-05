@@ -8,7 +8,7 @@
 import CoreML
 
 
-class ModelLoader {    
+class ModelLoader {
     let url: URL
     
     init(url: URL) {
@@ -16,9 +16,9 @@ class ModelLoader {
     }
 
     func load() async throws -> LanguageModel {
-        print("Compiling model")
+        print("Compiling model \(url)")
         let compiledURL = try await MLModel.compileModel(at: url)
-        
+
         print("Loading model")
         let config = MLModelConfiguration()
         config.computeUnits = .all

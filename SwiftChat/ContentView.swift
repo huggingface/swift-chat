@@ -2,18 +2,17 @@
 //  ContentView.swift
 //  SwiftChat
 //
-//  Created by Cyril Zakka on 4/3/23.
+//  Created by Pedro Cuenca on April 2023
+//  Based on code by Cyril Zakka from https://github.com/cyrilzakka/pen
 //
 
 import SwiftUI
 
 
 struct ContentView: View {
-    @Environment(\.openURL) var openURL
-    
     @State private var config = GenerationConfiguration()
     @State private var prompt = "Write a recipe for chocolate chip cookies"
-    @State private var modelURL: URL? = nil                     // TODO: read from defaults
+    @State private var modelURL: URL? = nil
     @State private var languageModel: LanguageModel? = nil
     
     enum ModelLoadingState {
@@ -26,12 +25,14 @@ struct ContentView: View {
     
     func modelDidChange(url: URL?) {
         guard let url = url else { return }
+        guard status != .loading else { return }
         
         status = .loading
         Task.init {
             let loader = ModelLoader(url: url)
             do {
                 languageModel = try await loader.load()
+                Settings.shared.currentModel = url
                 status = .ready
             } catch {
                 print("Error loading \(url): \(error)")
@@ -75,7 +76,7 @@ struct ContentView: View {
                     }
                 }
         }.onAppear {
-            modelDidChange(url: modelURL)
+            modelDidChange(url: Settings.shared.currentModel)
         }
         .onChange(of: modelURL) { model in
             modelDidChange(url: modelURL)
