@@ -9,11 +9,10 @@ import SwiftUI
 import CompactSlider
 
 struct ControlView: View {
-    
     var prompt: String = ""
     @Binding var config: GenerationConfiguration
     @Binding var model: URL?
-    let contextLength: UInt
+    let maxNewTokens = 256
     
     @State var discloseParams = true
     
@@ -50,7 +49,7 @@ struct ControlView: View {
                             Darwin.sqrt(CFloat(config.maxNewTokens))
                         } set: {
                             config.maxNewTokens = Int(Darwin.pow($0, 2))
-                        }, in: 1...sqrt(CFloat(contextLength)), step: 1) {
+                        }, in: 1...sqrt(CFloat(maxNewTokens)), step: 1) {
                             Text("Maximum Length")
                             Spacer()
                             Text("\(Int(config.maxNewTokens))")
@@ -116,10 +115,11 @@ struct ControlView: View {
                         .frame(maxWidth: .infinity)
                         .cornerRadius(5)
                         
-                        .fileImporter(isPresented: $showFilePicker, allowedContentTypes: [.data]) { result in
+                        // TODO: only allow .mlpackage (or .mlmodelc)
+                        .fileImporter(isPresented: $showFilePicker, allowedContentTypes: [.item], allowsMultipleSelection: false) { result in
                             switch result {
-                            case .success(let url):
-                                model = url
+                            case .success(let urls):
+                                model = urls.first
                             case .failure(let error):
                                 print("Import failed: \(error.localizedDescription)")
                             }

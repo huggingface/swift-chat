@@ -10,7 +10,8 @@
 		EB90085D2A02C53100B321C4 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB90085C2A02C53100B321C4 /* ControlView.swift */; };
 		EB9008602A02C5D500B321C4 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = EB90085F2A02C5D500B321C4 /* CompactSlider */; };
 		EB9008652A02CD9A00B321C4 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9008642A02CD9A00B321C4 /* State.swift */; };
-		EB9008672A0528FA00B321C4 /* TextGenerationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9008662A0528FA00B321C4 /* TextGenerationModel.swift */; };
+		EB9008672A0528FA00B321C4 /* LanguageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9008662A0528FA00B321C4 /* LanguageModel.swift */; };
+		EB9008692A0578C300B321C4 /* ModelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9008682A0578C300B321C4 /* ModelLoader.swift */; };
 		EBE1152F2A02AECC000A0CF4 /* SwiftChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE1152E2A02AECC000A0CF4 /* SwiftChatApp.swift */; };
 		EBE115312A02AECC000A0CF4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE115302A02AECC000A0CF4 /* ContentView.swift */; };
 		EBE115332A02AECD000A0CF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBE115322A02AECD000A0CF4 /* Assets.xcassets */; };
@@ -40,7 +41,8 @@
 /* Begin PBXFileReference section */
 		EB90085C2A02C53100B321C4 /* ControlView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
 		EB9008642A02CD9A00B321C4 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
-		EB9008662A0528FA00B321C4 /* TextGenerationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextGenerationModel.swift; sourceTree = "<group>"; };
+		EB9008662A0528FA00B321C4 /* LanguageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageModel.swift; sourceTree = "<group>"; };
+		EB9008682A0578C300B321C4 /* ModelLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelLoader.swift; sourceTree = "<group>"; };
 		EBE1152B2A02AECC000A0CF4 /* SwiftChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE1152E2A02AECC000A0CF4 /* SwiftChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftChatApp.swift; sourceTree = "<group>"; };
 		EBE115302A02AECC000A0CF4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,7 +112,8 @@
 				EBE115342A02AECD000A0CF4 /* SwiftChat.entitlements */,
 				EBE115352A02AECD000A0CF4 /* Preview Content */,
 				EB9008642A02CD9A00B321C4 /* State.swift */,
-				EB9008662A0528FA00B321C4 /* TextGenerationModel.swift */,
+				EB9008662A0528FA00B321C4 /* LanguageModel.swift */,
+				EB9008682A0578C300B321C4 /* ModelLoader.swift */,
 			);
 			path = SwiftChat;
 			sourceTree = "<group>";
@@ -276,9 +279,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB9008692A0578C300B321C4 /* ModelLoader.swift in Sources */,
 				EBE115312A02AECC000A0CF4 /* ContentView.swift in Sources */,
 				EB90085D2A02C53100B321C4 /* ControlView.swift in Sources */,
-				EB9008672A0528FA00B321C4 /* TextGenerationModel.swift in Sources */,
+				EB9008672A0528FA00B321C4 /* LanguageModel.swift in Sources */,
 				EBE1152F2A02AECC000A0CF4 /* SwiftChatApp.swift in Sources */,
 				EB9008652A02CD9A00B321C4 /* State.swift in Sources */,
 			);

@@ -13,36 +13,54 @@ struct ContentView: View {
     
     @State private var config = GenerationConfiguration()
     @State private var prompt = "Write a recipe for chocolate chip cookies"
-    @State private var model: URL? = nil
-    @State private var languageModel = LanguageModel()
+    @State private var modelURL: URL? = nil                     // TODO: read from defaults
+    @State private var languageModel: LanguageModel? = nil
     
+    enum ModelLoadingState {
+        case noModel
+        case loading
+        case ready
+    }
+    @State private var status: ModelLoadingState = .noModel
+    
+    
+    func modelDidChange(url: URL?) {
+        guard let url = url else { return }
+        
+        status = .loading
+        Task.init {
+            let loader = ModelLoader(url: url)
+            do {
+                languageModel = try await loader.load()
+                status = .ready
+            } catch {
+                print("Error loading \(url): \(error)")
+                status = .noModel
+            }
+        }
+    }
+
     func run() {
         config.prompt = prompt
-//        completer.complete(config, openURL: openURL)
+        // TODO: send prompt
     }
     
-//    @ViewBuilder
-//    var completeButton: some View {
-//        switch completer.status {
-//        case .starting(let progress):
-//            ProgressView(value: progress)
-//                .progressViewStyle(.circular)
-//                .controlSize(.small)
-//                .padding(.trailing, 6)
-//        case .working:
-//            ProgressView()
-//                .controlSize(.small)
-//                .padding(.trailing, 3)
-//        default:
-//            Button(action: run) { Label("Run", systemImage: "play.fill") }
-//                .keyboardShortcut("R")
-//                .disabled(completer.status == .missingModel)
-//        }
-//    }
+    @ViewBuilder
+    var runButton: some View {
+        switch status {
+        case .noModel:
+            EmptyView()
+        case .loading:
+            ProgressView().controlSize(.small).padding(.trailing, 6)
+        case .ready:
+            Button(action: run) { Label("Run", systemImage: "play.fill") }
+                .keyboardShortcut("R")
+        }
+    }
     
     var body: some View {
         NavigationSplitView {
-            ControlView(prompt: prompt, config: $config, model: $model, contextLength: languageModel.contextLength)
+            ControlView(prompt: prompt, config: $config, model: $modelURL)
                 .navigationSplitViewColumnWidth(min: 250, ideal: 300)
         } detail: {
             TextEditor(text: $prompt)
@@ -52,19 +70,15 @@ struct ContentView: View {
                 .lineSpacing(10)
                 .padding()
                 .toolbar {
-//                    ToolbarItem(placement: .primaryAction) {
-//                        completeButton
-//                    }
+                    ToolbarItem(placement: .primaryAction) {
+                        runButton
+                    }
                 }
         }.onAppear {
-            if let model {
-//                completer.loadModel(at: model)
-            }
+            modelDidChange(url: modelURL)
         }
-        .onChange(of: model) { model in
-            if let model {
-//                completer.loadModel(at: model)
-            }
+        .onChange(of: modelURL) { model in
+            modelDidChange(url: modelURL)
         }
 //        .onChange(of: completer.status) { status in
 //            switch status {
