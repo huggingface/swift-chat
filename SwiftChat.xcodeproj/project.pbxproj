@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB90085D2A02C53100B321C4 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB90085C2A02C53100B321C4 /* ControlView.swift */; };
+		EB9008602A02C5D500B321C4 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = EB90085F2A02C5D500B321C4 /* CompactSlider */; };
+		EB9008652A02CD9A00B321C4 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9008642A02CD9A00B321C4 /* State.swift */; };
+		EB9008672A0528FA00B321C4 /* TextGenerationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9008662A0528FA00B321C4 /* TextGenerationModel.swift */; };
 		EBE1152F2A02AECC000A0CF4 /* SwiftChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE1152E2A02AECC000A0CF4 /* SwiftChatApp.swift */; };
 		EBE115312A02AECC000A0CF4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE115302A02AECC000A0CF4 /* ContentView.swift */; };
 		EBE115332A02AECD000A0CF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBE115322A02AECD000A0CF4 /* Assets.xcassets */; };
@@ -34,6 +38,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB90085C2A02C53100B321C4 /* ControlView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
+		EB9008642A02CD9A00B321C4 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		EB9008662A0528FA00B321C4 /* TextGenerationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextGenerationModel.swift; sourceTree = "<group>"; };
 		EBE1152B2A02AECC000A0CF4 /* SwiftChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE1152E2A02AECC000A0CF4 /* SwiftChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftChatApp.swift; sourceTree = "<group>"; };
 		EBE115302A02AECC000A0CF4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -52,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB9008602A02C5D500B321C4 /* CompactSlider in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,11 +103,14 @@
 		EBE1152D2A02AECC000A0CF4 /* SwiftChat */ = {
 			isa = PBXGroup;
 			children = (
+				EB90085C2A02C53100B321C4 /* ControlView.swift */,
 				EBE1152E2A02AECC000A0CF4 /* SwiftChatApp.swift */,
 				EBE115302A02AECC000A0CF4 /* ContentView.swift */,
 				EBE115322A02AECD000A0CF4 /* Assets.xcassets */,
 				EBE115342A02AECD000A0CF4 /* SwiftChat.entitlements */,
 				EBE115352A02AECD000A0CF4 /* Preview Content */,
+				EB9008642A02CD9A00B321C4 /* State.swift */,
+				EB9008662A0528FA00B321C4 /* TextGenerationModel.swift */,
 			);
 			path = SwiftChat;
 			sourceTree = "<group>";
@@ -145,6 +156,9 @@
 			dependencies = (
 			);
 			name = SwiftChat;
+			packageProductDependencies = (
+				EB90085F2A02C5D500B321C4 /* CompactSlider */,
+			);
 			productName = SwiftChat;
 			productReference = EBE1152B2A02AECC000A0CF4 /* SwiftChat.app */;
 			productType = "com.apple.product-type.application";
@@ -217,6 +231,9 @@
 				Base,
 			);
 			mainGroup = EBE115222A02AECC000A0CF4;
+			packageReferences = (
+				EB90085E2A02C5D500B321C4 /* XCRemoteSwiftPackageReference "CompactSlider" */,
+			);
 			productRefGroup = EBE1152C2A02AECC000A0CF4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -260,7 +277,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBE115312A02AECC000A0CF4 /* ContentView.swift in Sources */,
+				EB90085D2A02C53100B321C4 /* ControlView.swift in Sources */,
+				EB9008672A0528FA00B321C4 /* TextGenerationModel.swift in Sources */,
 				EBE1152F2A02AECC000A0CF4 /* SwiftChatApp.swift in Sources */,
+				EB9008652A02CD9A00B321C4 /* State.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,6 +632,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EB90085E2A02C5D500B321C4 /* XCRemoteSwiftPackageReference "CompactSlider" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/buh/CompactSlider.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EB90085F2A02C5D500B321C4 /* CompactSlider */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB90085E2A02C5D500B321C4 /* XCRemoteSwiftPackageReference "CompactSlider" */;
+			productName = CompactSlider;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EBE115232A02AECC000A0CF4 /* Project object */;
 }
