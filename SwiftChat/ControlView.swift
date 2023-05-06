@@ -11,7 +11,8 @@ import CompactSlider
 struct ControlView: View {
     var prompt: String = ""
     @Binding var config: GenerationConfiguration
-    @Binding var model: URL?
+    @Binding var model: LanguageModel?
+    @Binding var modelURL: URL?
     let maxNewTokens = 256
     
     @State var discloseParams = true
@@ -102,7 +103,7 @@ struct ControlView: View {
                             showFilePicker.toggle()
                         }, label: {
                             
-                            Text(model != nil ? model!.lastPathComponent:"Select model...")
+                            Text(model?.description ?? "Select model...")
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 7)
                                 .overlay(
@@ -119,7 +120,7 @@ struct ControlView: View {
                         .fileImporter(isPresented: $showFilePicker, allowedContentTypes: [.item], allowsMultipleSelection: false) { result in
                             switch result {
                             case .success(let urls):
-                                model = urls.first
+                                modelURL = urls.first
                             case .failure(let error):
                                 print("Import failed: \(error.localizedDescription)")
                             }

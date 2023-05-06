@@ -17,17 +17,22 @@ class ModelLoader {
             print("Compiling model \(url)")
             let compiledURL = try await MLModel.compileModel(at: url)
             
-            // Cache compiled
-            let compiled = ModelLoader.lastCompiledModel
+            // Cache compiled (keep last one only)
+            try models.delete()
+            let compiledPath = models / url.deletingPathExtension().appendingPathExtension("mlmodelc").lastPathComponent
             try ModelLoader.models.mkdir(.p)
-            try Path(url: compiledURL)?.move(to: compiled, overwrite: true)
+            try Path(url: compiledURL)?.move(to: compiledPath, overwrite: true)
+            
+            // Create symlink (alternative: store name in UserDefaults)
+            try compiledPath.symlink(as: lastCompiledModel)
         }
         
-        // Load last model used (or just compiled)
-        print("Loading model from \(lastCompiledModel.url)")
+        // Load last model used (or the one we just compiled)
+        let lastURL = try lastCompiledModel.readlink().url
+        print("Loading model from \(lastURL)")
         let config = MLModelConfiguration()
         config.computeUnits = .all
-        let model = try MLModel(contentsOf: lastCompiledModel.url, configuration: config)
+        let model = try MLModel(contentsOf: lastURL, configuration: config)
         print("Done")
         return LanguageModel(model: model)
     }

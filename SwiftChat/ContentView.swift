@@ -59,7 +59,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationSplitView {
-            ControlView(prompt: prompt, config: $config, model: $modelURL)
+            ControlView(prompt: prompt, config: $config, model: $languageModel, modelURL: $modelURL)
                 .navigationSplitViewColumnWidth(min: 250, ideal: 300)
         } detail: {
             TextEditor(text: $prompt)

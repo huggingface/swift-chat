@@ -11,6 +11,14 @@ class LanguageModel: ObservableObject {
     let model: MLModel
     let contextLength: Int    
 
+    var description: String {
+        if let description = model.modelDescription.metadata[MLModelMetadataKey.description] as? String,
+           !description.isEmpty {
+            return description
+        }
+        return model.configuration.modelDisplayName ?? ""
+    }
+    
     init(model: MLModel) {
         self.model = model
         
