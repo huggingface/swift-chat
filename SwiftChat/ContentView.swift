@@ -23,21 +23,19 @@ struct ContentView: View {
     @State private var status: ModelLoadingState = .noModel
     
     
-    func modelDidChange(url: URL?) {
-        guard let url = url else { return }
+    func modelDidChange() {
         guard status != .loading else { return }
         
         status = .loading
         Task.init {
-            let loader = ModelLoader(url: url)
             do {
-                languageModel = try await loader.load()
-                Settings.shared.currentModel = url
+                languageModel = try await ModelLoader.load(url: modelURL)
                 status = .ready
             } catch {
-                print("Error loading \(url): \(error)")
+                print("No model could be loaded: \(error)")
                 status = .noModel
             }
+
         }
     }
 
@@ -76,10 +74,10 @@ struct ContentView: View {
                     }
                 }
         }.onAppear {
-            modelDidChange(url: Settings.shared.currentModel)
+            modelDidChange()
         }
         .onChange(of: modelURL) { model in
-            modelDidChange(url: modelURL)
+            modelDidChange()
         }
 //        .onChange(of: completer.status) { status in
 //            switch status {

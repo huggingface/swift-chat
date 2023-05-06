@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB57105F2A05962F00BA569B /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = EB57105E2A05962F00BA569B /* Path */; };
 		EB90085D2A02C53100B321C4 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB90085C2A02C53100B321C4 /* ControlView.swift */; };
 		EB9008602A02C5D500B321C4 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = EB90085F2A02C5D500B321C4 /* CompactSlider */; };
 		EB9008652A02CD9A00B321C4 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9008642A02CD9A00B321C4 /* State.swift */; };
@@ -62,6 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB9008602A02C5D500B321C4 /* CompactSlider in Frameworks */,
+				EB57105F2A05962F00BA569B /* Path in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,6 +163,7 @@
 			name = SwiftChat;
 			packageProductDependencies = (
 				EB90085F2A02C5D500B321C4 /* CompactSlider */,
+				EB57105E2A05962F00BA569B /* Path */,
 			);
 			productName = SwiftChat;
 			productReference = EBE1152B2A02AECC000A0CF4 /* SwiftChat.app */;
@@ -236,6 +239,7 @@
 			mainGroup = EBE115222A02AECC000A0CF4;
 			packageReferences = (
 				EB90085E2A02C5D500B321C4 /* XCRemoteSwiftPackageReference "CompactSlider" */,
+				EB57105D2A05962F00BA569B /* XCRemoteSwiftPackageReference "Path.swift" */,
 			);
 			productRefGroup = EBE1152C2A02AECC000A0CF4 /* Products */;
 			projectDirPath = "";
@@ -638,6 +642,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		EB57105D2A05962F00BA569B /* XCRemoteSwiftPackageReference "Path.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mxcl/Path.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		EB90085E2A02C5D500B321C4 /* XCRemoteSwiftPackageReference "CompactSlider" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/buh/CompactSlider.git";
@@ -649,6 +661,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		EB57105E2A05962F00BA569B /* Path */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB57105D2A05962F00BA569B /* XCRemoteSwiftPackageReference "Path.swift" */;
+			productName = Path;
+		};
 		EB90085F2A02C5D500B321C4 /* CompactSlider */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EB90085E2A02C5D500B321C4 /* XCRemoteSwiftPackageReference "CompactSlider" */;
