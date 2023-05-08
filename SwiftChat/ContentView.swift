@@ -7,11 +7,12 @@
 //
 
 import SwiftUI
-
+import Generation
+import Models
 
 struct ContentView: View {
-    @State private var config = GenerationConfiguration()
-    @State private var prompt = "Write a recipe for chocolate chip cookies"
+    @State private var config = GenerationConfig(maxNewTokens: 20)
+    @State private var prompt = "My name is Pedro and I am "
     @State private var modelURL: URL? = nil
     @State private var languageModel: LanguageModel? = nil
     
@@ -30,6 +31,8 @@ struct ContentView: View {
         Task.init {
             do {
                 languageModel = try await ModelLoader.load(url: modelURL)
+                config.bosTokenId = languageModel?.bosTokenId
+                config.eosTokenId = languageModel?.eosTokenId
                 status = .ready
             } catch {
                 print("No model could be loaded: \(error)")
@@ -40,8 +43,10 @@ struct ContentView: View {
     }
 
     func run() {
-        config.prompt = prompt
-        // TODO: send prompt
+        guard let languageModel = languageModel else { return }
+        
+        let output = languageModel.generate(config: config, prompt: prompt)
+        prompt = output
     }
     
     @ViewBuilder

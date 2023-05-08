@@ -7,10 +7,12 @@
 
 import SwiftUI
 import CompactSlider
+import Models
+import Generation
 
 struct ControlView: View {
     var prompt: String = ""
-    @Binding var config: GenerationConfiguration
+    @Binding var config: GenerationConfig
     @Binding var model: LanguageModel?
     @Binding var modelURL: URL?
     let maxNewTokens = 256

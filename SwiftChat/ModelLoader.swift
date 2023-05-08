@@ -7,6 +7,7 @@
 
 import CoreML
 import Path
+import Models
 
 class ModelLoader {
     static let models = Path.applicationSupport / "hf-compiled-transformers"
@@ -38,4 +39,6 @@ class ModelLoader {
     }
 }
 
-extension String: Error {}
+import Combine
+
+extension LanguageModel: ObservableObject {}
