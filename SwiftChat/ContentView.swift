@@ -45,8 +45,18 @@ struct ContentView: View {
     func run() {
         guard let languageModel = languageModel else { return }
         
-        let output = languageModel.generate(config: config, prompt: prompt)
-        prompt = output
+        @Sendable func showOutput(currentGeneration: String) {
+            Task { @MainActor in
+                prompt = currentGeneration
+            }
+        }
+        
+        Task.init {
+            let output = await languageModel.generate(config: config, prompt: prompt) { inProgressGeneration in
+                showOutput(currentGeneration: inProgressGeneration)
+            }
+            showOutput(currentGeneration: output)
+        }
     }
     
     @ViewBuilder
