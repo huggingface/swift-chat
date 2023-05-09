@@ -21,12 +21,13 @@ struct ContentView: View {
     @State private var modelURL: URL? = nil
     @State private var languageModel: LanguageModel? = nil
     
-    enum ModelLoadingState {
+    enum ModelState: Equatable {
         case noModel
         case loading
         case ready
+        case generating(Float)
     }
-    @State private var status: ModelLoadingState = .noModel
+    @State private var status: ModelState = .noModel
     
     
     func modelDidChange() {
@@ -50,20 +51,24 @@ struct ContentView: View {
     func run() {
         guard let languageModel = languageModel else { return }
         
-        @Sendable func showOutput(currentGeneration: String) {
+        @Sendable func showOutput(currentGeneration: String, progress: Float, finished: Bool = false) {
             Task { @MainActor in
                 // I'm getting `\\n` instead of `\n` in at least some models. To be debugged.
                 prompt = currentGeneration.replacingOccurrences(of: "\\n", with: "\n")
+                status = finished ? .ready : .generating(progress)
             }
         }
         
         Task.init {
+            status = .generating(0)
+            var tokensReceived = 0
             let begin = Date()
             let output = await languageModel.generate(config: config, prompt: prompt) { inProgressGeneration in
-                showOutput(currentGeneration: inProgressGeneration)
+                tokensReceived += 1
+                showOutput(currentGeneration: inProgressGeneration, progress: Float(tokensReceived)/Float(config.maxNewTokens))
             }
             print("Took \(Date().timeIntervalSince(begin))")
-            showOutput(currentGeneration: output)
+            showOutput(currentGeneration: output, progress: 1, finished: true)
         }
     }
     
@@ -77,8 +82,11 @@ struct ContentView: View {
         case .ready:
             Button(action: run) { Label("Run", systemImage: "play.fill") }
                 .keyboardShortcut("R")
+        case .generating(let progress):
+            ProgressView(value: progress).controlSize(.small).progressViewStyle(.circular).padding(.trailing, 6)
         }
     }
+
     
     var body: some View {
         NavigationSplitView {
