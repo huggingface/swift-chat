@@ -15,7 +15,6 @@ struct ControlView: View {
     @Binding var config: GenerationConfig
     @Binding var model: LanguageModel?
     @Binding var modelURL: URL?
-    let maxNewTokens = 256
     
     @State var discloseParams = true
     
@@ -49,10 +48,10 @@ struct ControlView: View {
                         .help("Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive.")
                         
                         CompactSlider(value: Binding {
-                            Darwin.sqrt(CFloat(config.maxNewTokens))
+                            CFloat(config.maxNewTokens)
                         } set: {
-                            config.maxNewTokens = Int(Darwin.pow($0, 2))
-                        }, in: 1...sqrt(CFloat(maxNewTokens)), step: 1) {
+                            config.maxNewTokens = Int($0)
+                        }, in: CFloat(1)...CFloat(model?.maxContextLength ?? 128), step: 1) {
                             Text("Maximum Length")
                             Spacer()
                             Text("\(Int(config.maxNewTokens))")

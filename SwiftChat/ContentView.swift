@@ -12,7 +12,12 @@ import Models
 
 struct ContentView: View {
     @State private var config = GenerationConfig(maxNewTokens: 20)
-    @State private var prompt = "My name is Pedro and I am "
+//    @State private var prompt = """
+//    Correct spelling and grammar from the following text.
+//    I do not wan to go
+//
+//    """
+    @State private var prompt = "Write a poem about Valencia\n"
     @State private var modelURL: URL? = nil
     @State private var languageModel: LanguageModel? = nil
     
@@ -47,14 +52,17 @@ struct ContentView: View {
         
         @Sendable func showOutput(currentGeneration: String) {
             Task { @MainActor in
-                prompt = currentGeneration
+                // I'm getting `\\n` instead of `\n` in at least some models. To be debugged.
+                prompt = currentGeneration.replacingOccurrences(of: "\\n", with: "\n")
             }
         }
         
         Task.init {
+            let begin = Date()
             let output = await languageModel.generate(config: config, prompt: prompt) { inProgressGeneration in
                 showOutput(currentGeneration: inProgressGeneration)
             }
+            print("Took \(Date().timeIntervalSince(begin))")
             showOutput(currentGeneration: output)
         }
     }
@@ -81,7 +89,7 @@ struct ContentView: View {
                 .font(.body)
                 .fontDesign(.rounded)
                 .scrollContentBackground(.hidden)
-                .lineSpacing(10)
+                .lineSpacing(5)
                 .padding()
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
