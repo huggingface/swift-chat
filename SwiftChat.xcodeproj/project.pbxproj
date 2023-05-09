@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EB2E91A72A06A45A00FA3ACE /* Transformers in Frameworks */ = {isa = PBXBuildFile; productRef = EB2E91A62A06A45A00FA3ACE /* Transformers */; };
+		EB545ED82A0AC32A00C8A5BD /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB545ED72A0AC32A00C8A5BD /* StatusView.swift */; };
 		EB57105F2A05962F00BA569B /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = EB57105E2A05962F00BA569B /* Path */; };
 		EB90085D2A02C53100B321C4 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB90085C2A02C53100B321C4 /* ControlView.swift */; };
 		EB9008602A02C5D500B321C4 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = EB90085F2A02C5D500B321C4 /* CompactSlider */; };
@@ -39,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB545ED72A0AC32A00C8A5BD /* StatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		EB90085C2A02C53100B321C4 /* ControlView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
 		EB9008682A0578C300B321C4 /* ModelLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelLoader.swift; sourceTree = "<group>"; };
 		EBE1152B2A02AECC000A0CF4 /* SwiftChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,6 +110,7 @@
 				EBE1152E2A02AECC000A0CF4 /* SwiftChatApp.swift */,
 				EB90085C2A02C53100B321C4 /* ControlView.swift */,
 				EBE115302A02AECC000A0CF4 /* ContentView.swift */,
+				EB545ED72A0AC32A00C8A5BD /* StatusView.swift */,
 				EBE115322A02AECD000A0CF4 /* Assets.xcassets */,
 				EBE115342A02AECD000A0CF4 /* SwiftChat.entitlements */,
 				EBE115352A02AECD000A0CF4 /* Preview Content */,
@@ -285,6 +288,7 @@
 				EBE115312A02AECC000A0CF4 /* ContentView.swift in Sources */,
 				EB90085D2A02C53100B321C4 /* ControlView.swift in Sources */,
 				EBE1152F2A02AECC000A0CF4 /* SwiftChatApp.swift in Sources */,
+				EB545ED82A0AC32A00C8A5BD /* StatusView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
