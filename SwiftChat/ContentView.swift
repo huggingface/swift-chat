@@ -10,6 +10,13 @@ import SwiftUI
 import Generation
 import Models
 
+enum ModelState: Equatable {
+    case noModel
+    case loading
+    case ready(Double?)
+    case generating(Double)
+}
+
 struct ContentView: View {
     @State private var config = GenerationConfig(maxNewTokens: 20)
 //    @State private var prompt = """
@@ -21,12 +28,6 @@ struct ContentView: View {
     @State private var modelURL: URL? = nil
     @State private var languageModel: LanguageModel? = nil
     
-    enum ModelState: Equatable {
-        case noModel
-        case loading
-        case ready
-        case generating(Float)
-    }
     @State private var status: ModelState = .noModel
     
     
@@ -39,7 +40,7 @@ struct ContentView: View {
                 languageModel = try await ModelLoader.load(url: modelURL)
                 config.bosTokenId = languageModel?.bosTokenId
                 config.eosTokenId = languageModel?.eosTokenId
-                status = .ready
+                status = .ready(nil)
             } catch {
                 print("No model could be loaded: \(error)")
                 status = .noModel
@@ -51,11 +52,15 @@ struct ContentView: View {
     func run() {
         guard let languageModel = languageModel else { return }
         
-        @Sendable func showOutput(currentGeneration: String, progress: Float, finished: Bool = false) {
+        @Sendable func showOutput(currentGeneration: String, progress: Double, completedTokensPerSecond: Double? = nil) {
             Task { @MainActor in
                 // I'm getting `\\n` instead of `\n` in at least some models. To be debugged.
                 prompt = currentGeneration.replacingOccurrences(of: "\\n", with: "\n")
-                status = finished ? .ready : .generating(progress)
+                if let tps = completedTokensPerSecond {
+                    status = .ready(tps)
+                } else {
+                    status = .generating(progress)
+                }
             }
         }
         
@@ -65,10 +70,12 @@ struct ContentView: View {
             let begin = Date()
             let output = await languageModel.generate(config: config, prompt: prompt) { inProgressGeneration in
                 tokensReceived += 1
-                showOutput(currentGeneration: inProgressGeneration, progress: Float(tokensReceived)/Float(config.maxNewTokens))
+                showOutput(currentGeneration: inProgressGeneration, progress: Double(tokensReceived)/Double(config.maxNewTokens))
             }
-            print("Took \(Date().timeIntervalSince(begin))")
-            showOutput(currentGeneration: output, progress: 1, finished: true)
+            let completionTime = Date().timeIntervalSince(begin)
+            let tokensPerSecond = Double(tokensReceived) / completionTime
+            showOutput(currentGeneration: output, progress: 1, completedTokensPerSecond: tokensPerSecond)
+            print("Took \(completionTime)")
         }
     }
     
@@ -90,8 +97,11 @@ struct ContentView: View {
     
     var body: some View {
         NavigationSplitView {
-            ControlView(prompt: prompt, config: $config, model: $languageModel, modelURL: $modelURL)
-                .navigationSplitViewColumnWidth(min: 250, ideal: 300)
+            VStack {
+                ControlView(prompt: prompt, config: $config, model: $languageModel, modelURL: $modelURL)
+                StatusView(status: $status)
+            }
+            .navigationSplitViewColumnWidth(min: 250, ideal: 300)
         } detail: {
             TextEditor(text: $prompt)
                 .font(.body)
