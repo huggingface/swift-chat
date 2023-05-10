@@ -38,8 +38,7 @@ struct ContentView: View {
         Task.init {
             do {
                 languageModel = try await ModelLoader.load(url: modelURL)
-                config.bosTokenId = languageModel?.bosTokenId
-                config.eosTokenId = languageModel?.eosTokenId
+                if let config = languageModel?.defaultGenerationConfig { self.config = config }
                 status = .ready(nil)
             } catch {
                 print("No model could be loaded: \(error)")
@@ -164,7 +163,7 @@ struct ContentView: View {
         .onChange(of: modelURL) { model in
             modelDidChange()
         }
-    }    
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
