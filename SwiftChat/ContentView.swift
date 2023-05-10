@@ -29,7 +29,7 @@ struct ContentView: View {
     @State private var languageModel: LanguageModel? = nil
     
     @State private var status: ModelState = .noModel
-    
+    @State private var outputText: AttributedString = ""
     
     func modelDidChange() {
         guard status != .loading else { return }
@@ -55,7 +55,16 @@ struct ContentView: View {
         @Sendable func showOutput(currentGeneration: String, progress: Double, completedTokensPerSecond: Double? = nil) {
             Task { @MainActor in
                 // I'm getting `\\n` instead of `\n` in at least some models. To be debugged.
-                prompt = currentGeneration.replacingOccurrences(of: "\\n", with: "\n")
+                let response = currentGeneration[prompt.endIndex...].replacingOccurrences(of: "\\n", with: "\n")
+                
+                // Format prompt + response with different colors
+                var styledPrompt = AttributedString(prompt)
+                styledPrompt.foregroundColor = .black
+                
+                var styledOutput = AttributedString(response)
+                styledOutput.foregroundColor = .accentColor
+                
+                outputText = styledPrompt + styledOutput
                 if let tps = completedTokensPerSecond {
                     status = .ready(tps)
                 } else {
@@ -103,34 +112,59 @@ struct ContentView: View {
             }
             .navigationSplitViewColumnWidth(min: 250, ideal: 300)
         } detail: {
-            TextEditor(text: $prompt)
-                .font(.body)
-                .fontDesign(.rounded)
-                .scrollContentBackground(.hidden)
-                .lineSpacing(5)
+            GeometryReader { geometry in
+                VStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Your input (use format appropriate for the model you are using)")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+
+                        TextEditor(text: $prompt)
+                            .font(.body)
+                            .fontDesign(.rounded)
+                            .scrollContentBackground(.hidden)
+                            .multilineTextAlignment(.leading)
+                            .padding(.all, 4)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                            )
+                    }
+                    .frame(height: 100)
+                    .padding(.bottom, 16)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Language Model Output")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+
+                        Text(outputText)
+                            .font(.system(size: 14))
+                            .foregroundColor(.blue)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(nil)
+                            .frame(minWidth: geometry.size.width - 44, minHeight: 200, alignment: Alignment(horizontal: .leading, vertical: .top))
+                            .padding(.all, 4)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                            )
+                    }
+                }
                 .padding()
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         runButton
                     }
                 }
+            }
         }.onAppear {
             modelDidChange()
         }
         .onChange(of: modelURL) { model in
             modelDidChange()
         }
-//        .onChange(of: completer.status) { status in
-//            switch status {
-//            case .missingModel, .idle, .working, .starting:
-//                print("Error")
-//            case .progress, .done:
-//                promptArea = completer.status.response!.result
-//            case .failed(let error):
-//                print("\(error)")
-//            }
-//        }
-    }
+    }    
 }
 
 struct ContentView_Previews: PreviewProvider {
