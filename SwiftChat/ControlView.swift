@@ -48,6 +48,18 @@ struct ControlView: View {
                         .help("Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive.")
                         
                         CompactSlider(value: Binding {
+                            CFloat(config.topK)
+                        } set: {
+                            config.topK = Int($0)
+                        }, in: 1...50, step: 1) {
+                            Text("Top K")
+                            Spacer()
+                            Text("\(config.topK)")
+                        }
+                        .compactSliderSecondaryColor(.blue)
+                        .help("Sort predicted tokens by probability and discards those below the k-th one. A top-k value of 1 is equivalent to greedy search (select the most probable token)")
+                        
+                        CompactSlider(value: Binding {
                             CFloat(config.maxNewTokens)
                         } set: {
                             config.maxNewTokens = Int($0)
@@ -68,34 +80,34 @@ struct ControlView: View {
                 
                 Divider()
                     
-                Group {
-                    DisclosureGroup(isExpanded: $discloseAdvanced) {
-                        Spacer()
-                        CompactSlider(value: $config.topP) {
-                            Text("Top P")
-                            Spacer()
-                            Text("\(config.topP, specifier: "%.2f")")
-                        }
-                        .help("Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered.")
-                        CompactSlider(value: Binding {
-                            Darwin.sqrt(CGFloat(config.repetitionPenalty))
-                        } set: {
-                            config.repetitionPenalty = Darwin.pow($0, 2)
-                        }, in: 1...sqrt(CGFloat(10))) {
-                            Text("Frequency Penalty")
-                            Spacer()
-                            Text("\(config.repetitionPenalty, specifier: "%.1f")")
-                        }.help("How much to penalize new tokens based on their existing frequency in the text so far. Decreases the model's likelihood to repeat the same line verbatim.")
-                     } label: {
-                        HStack {
-                            Label("Advanced", systemImage: "wrench.adjustable").foregroundColor(.secondary)
-                            Spacer()
-                        }
-                    }
-                     .compactSliderSecondaryColor(.blue)
-                }
-                
-                Divider()
+//                Group {
+//                    DisclosureGroup(isExpanded: $discloseAdvanced) {
+//                        Spacer()
+//                        CompactSlider(value: $config.topP) {
+//                            Text("Top P")
+//                            Spacer()
+//                            Text("\(config.topP, specifier: "%.2f")")
+//                        }
+//                        .help("Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered.")
+//                        CompactSlider(value: Binding {
+//                            Darwin.sqrt(CGFloat(config.repetitionPenalty))
+//                        } set: {
+//                            config.repetitionPenalty = Darwin.pow($0, 2)
+//                        }, in: 1...sqrt(CGFloat(10))) {
+//                            Text("Frequency Penalty")
+//                            Spacer()
+//                            Text("\(config.repetitionPenalty, specifier: "%.1f")")
+//                        }.help("How much to penalize new tokens based on their existing frequency in the text so far. Decreases the model's likelihood to repeat the same line verbatim.")
+//                     } label: {
+//                        HStack {
+//                            Label("Advanced", systemImage: "wrench.adjustable").foregroundColor(.secondary)
+//                            Spacer()
+//                        }
+//                    }
+//                     .compactSliderSecondaryColor(.blue)
+//                }
+//
+//                Divider()
                 
                 Group {
                     DisclosureGroup(isExpanded: $disclosedModel) {
