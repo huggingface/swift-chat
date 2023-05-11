@@ -157,6 +157,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .navigationTitle("Language Model Tester")
         }.onAppear {
             modelDidChange()
         }
