@@ -51,6 +51,7 @@ struct ControlView: View {
                             CFloat(config.topK)
                         } set: {
                             config.topK = Int($0)
+                            config.doSample = config.topK > 1
                         }, in: 1...50, step: 1) {
                             Text("Top K")
                             Spacer()
