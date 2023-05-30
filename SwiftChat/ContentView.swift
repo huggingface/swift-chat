@@ -27,6 +27,8 @@ struct ContentView: View {
     @State private var status: ModelState = .noModel
     @State private var outputText: AttributedString = ""
     
+    @Binding var clearTriggered: Bool
+    
     func modelDidChange() {
         guard status != .loading else { return }
         
@@ -42,6 +44,10 @@ struct ContentView: View {
             }
 
         }
+    }
+    
+    func clear() {
+        outputText = ""
     }
 
     func run() {
@@ -151,6 +157,9 @@ struct ContentView: View {
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(Color.gray.opacity(0.5), lineWidth: 1)
                             )
+                            .onChange(of: clearTriggered) { _ in
+                                clear()
+                            }
                     }
                 }
                 .padding()
@@ -172,6 +181,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(clearTriggered: .constant(false))
     }
 }

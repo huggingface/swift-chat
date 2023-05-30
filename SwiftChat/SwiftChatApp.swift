@@ -9,9 +9,22 @@ import SwiftUI
 
 @main
 struct SwiftChatApp: App {
+    @State private var clearTriggered = false
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(clearTriggered: $clearTriggered)
+        }
+        .commands {
+            CommandGroup(after: .pasteboard) {
+                Button(action: {
+                    print("clear")
+                    self.clearTriggered.toggle()
+                }) {
+                    Text("Clear Output")
+                }
+                .keyboardShortcut(.delete, modifiers: [.command])
+            }
         }
     }
 }
