@@ -15,15 +15,11 @@ enum ModelState: Equatable {
     case loading
     case ready(Double?)
     case generating(Double)
+    case failed(String)
 }
 
 struct ContentView: View {
     @State private var config = GenerationConfig(maxNewTokens: 20)
-//    @State private var prompt = """
-//    Correct spelling and grammar from the following text.
-//    I do not wan to go
-//
-//    """
     @State private var prompt = "Write a poem about Valencia\n"
     @State private var modelURL: URL? = nil
     @State private var languageModel: LanguageModel? = nil
@@ -76,14 +72,21 @@ struct ContentView: View {
             status = .generating(0)
             var tokensReceived = 0
             let begin = Date()
-            let output = await languageModel.generate(config: config, prompt: prompt) { inProgressGeneration in
-                tokensReceived += 1
-                showOutput(currentGeneration: inProgressGeneration, progress: Double(tokensReceived)/Double(config.maxNewTokens))
+            do {
+                let output = try await languageModel.generate(config: config, prompt: prompt) { inProgressGeneration in
+                    tokensReceived += 1
+                    showOutput(currentGeneration: inProgressGeneration, progress: Double(tokensReceived)/Double(config.maxNewTokens))
+                }
+                let completionTime = Date().timeIntervalSince(begin)
+                let tokensPerSecond = Double(tokensReceived) / completionTime
+                showOutput(currentGeneration: output, progress: 1, completedTokensPerSecond: tokensPerSecond)
+                print("Took \(completionTime)")
+            } catch {
+                print("Error \(error)")
+                Task { @MainActor in
+                    status = .failed("\(error)")
+                }
             }
-            let completionTime = Date().timeIntervalSince(begin)
-            let tokensPerSecond = Double(tokensReceived) / completionTime
-            showOutput(currentGeneration: output, progress: 1, completedTokensPerSecond: tokensPerSecond)
-            print("Took \(completionTime)")
         }
     }
     
@@ -94,7 +97,7 @@ struct ContentView: View {
             EmptyView()
         case .loading:
             ProgressView().controlSize(.small).padding(.trailing, 6)
-        case .ready:
+        case .ready, .failed:
             Button(action: run) { Label("Run", systemImage: "play.fill") }
                 .keyboardShortcut("R")
         case .generating(let progress):

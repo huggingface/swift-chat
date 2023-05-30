@@ -57,9 +57,8 @@ struct StatusView: View {
             } else {
                 Text("Ready").frame(height: 50)
             }
-            //        case .failed(let error):
-            //            AnyView(errorWithDetails("Error message", error: error))
-            //        }
+        case .failed(let errorMessage):
+            Text("Error: \(errorMessage)").frame(height: 50)
         }
     }
 }
