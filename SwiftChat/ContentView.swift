@@ -55,8 +55,12 @@ struct ContentView: View {
         
         @Sendable func showOutput(currentGeneration: String, progress: Double, completedTokensPerSecond: Double? = nil) {
             Task { @MainActor in
-                // I'm getting `\\n` instead of `\n` in at least some models. To be debugged.
-                let response = currentGeneration[prompt.endIndex...].replacingOccurrences(of: "\\n", with: "\n")
+                // Temporary hack to remove start token returned by llama tokenizers
+                var response = currentGeneration.deletingPrefix("<s> ")
+                
+                // Strip prompt
+                guard response.count > prompt.count else { return }
+                response = response[prompt.endIndex...].replacingOccurrences(of: "\\n", with: "\n")
                 
                 // Format prompt + response with different colors
                 var styledPrompt = AttributedString(prompt)
@@ -182,5 +186,12 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView(clearTriggered: .constant(false))
+    }
+}
+
+extension String {
+    func deletingPrefix(_ prefix: String) -> String {
+        guard hasPrefix(prefix) else { return self }
+        return String(dropFirst(prefix.count))
     }
 }
