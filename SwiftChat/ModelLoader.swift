@@ -30,12 +30,7 @@ class ModelLoader {
         
         // Load last model used (or the one we just compiled)
         let lastURL = try lastCompiledModel.readlink().url
-        print("Loading model from \(lastURL)")
-        let config = MLModelConfiguration()
-        config.computeUnits = .all
-        let model = try MLModel(contentsOf: lastURL, configuration: config)
-        print("Done")
-        return LanguageModel(model: model)
+        return try LanguageModel.loadCompiled(url: lastURL, computeUnits: .cpuAndGPU)
     }
 }
 
