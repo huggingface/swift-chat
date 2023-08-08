@@ -650,7 +650,7 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		EB2E91A52A06A45A00FA3ACE /* XCRemoteSwiftPackageReference "swift-transformers" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pcuenca/swift-transformers.git";
+			repositoryURL = "https://github.com/huggingface/swift-transformers.git";
 			requirement = {
 				branch = main;
 				kind = branch;
