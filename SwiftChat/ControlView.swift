@@ -51,7 +51,6 @@ struct ControlView: View {
                             CFloat(config.topK)
                         } set: {
                             config.topK = Int($0)
-                            config.doSample = config.topK > 1
                         }, in: 1...50, step: 1) {
                             Text("Top K")
                             Spacer()
@@ -77,10 +76,15 @@ struct ControlView: View {
                            Spacer()
                        }
                    }
-               }
-                
+                }.disabled(!config.doSample)
+
+                HStack {
+                    Toggle(isOn: $config.doSample) { Text("Sample") }
+                    Spacer()
+                }
+
                 Divider()
-                    
+
 //                Group {
 //                    DisclosureGroup(isExpanded: $discloseAdvanced) {
 //                        Spacer()
