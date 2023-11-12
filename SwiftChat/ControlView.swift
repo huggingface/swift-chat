@@ -45,6 +45,7 @@ struct ControlView: View {
                             )
                         )
                         .compactSliderSecondaryColor(config.temperature <= 0.5 ? .blue : .red)
+                        .disabled(!config.doSample)
                         .help("Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive.")
                         
                         CompactSlider(value: Binding {
@@ -57,6 +58,7 @@ struct ControlView: View {
                             Text("\(config.topK)")
                         }
                         .compactSliderSecondaryColor(.blue)
+                        .disabled(!config.doSample)
                         .help("Sort predicted tokens by probability and discards those below the k-th one. A top-k value of 1 is equivalent to greedy search (select the most probable token)")
                         
                         CompactSlider(value: Binding {
@@ -76,7 +78,7 @@ struct ControlView: View {
                            Spacer()
                        }
                    }
-                }.disabled(!config.doSample)
+                }
 
                 HStack {
                     Toggle(isOn: $config.doSample) { Text("Sample") }
