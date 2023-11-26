@@ -38,6 +38,7 @@ struct ContentView: View {
                 languageModel = try await ModelLoader.load(url: modelURL)
                 if let config = languageModel?.defaultGenerationConfig { self.config = config }
                 status = .ready(nil)
+                isShowingChatView = true
             } catch {
                 print("No model could be loaded: \(error)")
                 status = .noModel
@@ -115,69 +116,88 @@ struct ContentView: View {
         }
     }
 
+    var chatView: some View {
+        GeometryReader { geometry in
+            VStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Your input (use format appropriate for the model you are using)")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+
+                    TextEditor(text: $prompt)
+                        .font(.body)
+                        .fontDesign(.rounded)
+                        .scrollContentBackground(.hidden)
+                        .multilineTextAlignment(.leading)
+                        .padding(.all, 4)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                        )
+                }
+                .frame(height: 100)
+                .padding(.bottom, 16)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Language Model Output")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+
+                    Text(outputText)
+                        .font(.system(size: 14))
+                        .foregroundColor(.blue)
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(nil)
+                        .frame(minWidth: geometry.size.width - 44, minHeight: 200, alignment: Alignment(horizontal: .leading, vertical: .top))
+                        .padding(.all, 4)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                        )
+                        .onChange(of: clearTriggered) { _, _ in
+                            clear()
+                        }
+                }
+            }
+            .padding()
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    runButton
+                }
+            }
+        }
+        .navigationTitle("Language Model Tester")
+    }
+    
+    @State
+    private var isShowingChatView = false
     
     var body: some View {
         NavigationSplitView {
             VStack {
                 ControlView(prompt: prompt, config: $config, model: $languageModel, modelURL: $modelURL)
+#if os(iOS)
+                if status == .ready(nil) {
+                    Button("Start Chatting") {
+                        isShowingChatView = true
+                    }
+                } else {
+                    StatusView(status: $status)
+                }
+#else
                 StatusView(status: $status)
+#endif
             }
             .navigationSplitViewColumnWidth(min: 250, ideal: 300)
-        } detail: {
-            GeometryReader { geometry in
-                VStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Your input (use format appropriate for the model you are using)")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-
-                        TextEditor(text: $prompt)
-                            .font(.body)
-                            .fontDesign(.rounded)
-                            .scrollContentBackground(.hidden)
-                            .multilineTextAlignment(.leading)
-                            .padding(.all, 4)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
-                            )
-                    }
-                    .frame(height: 100)
-                    .padding(.bottom, 16)
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Language Model Output")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-
-                        Text(outputText)
-                            .font(.system(size: 14))
-                            .foregroundColor(.blue)
-                            .multilineTextAlignment(.leading)
-                            .lineLimit(nil)
-                            .frame(minWidth: geometry.size.width - 44, minHeight: 200, alignment: Alignment(horizontal: .leading, vertical: .top))
-                            .padding(.all, 4)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
-                            )
-                            .onChange(of: clearTriggered) { _ in
-                                clear()
-                            }
-                    }
-                }
-                .padding()
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        runButton
-                    }
-                }
+            .navigationDestination(isPresented: $isShowingChatView) {
+                chatView
             }
-            .navigationTitle("Language Model Tester")
+        } detail: {
+            chatView
         }.onAppear {
             modelDidChange()
         }
-        .onChange(of: modelURL) { model in
+        .onChange(of: modelURL) { model, _ in
             modelDidChange()
         }
     }
