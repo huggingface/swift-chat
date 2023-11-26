@@ -181,6 +181,7 @@ struct ContentView: View {
                     Button("Start Chatting") {
                         isShowingChatView = true
                     }
+                    .padding()
                 } else {
                     StatusView(status: $status)
                 }
