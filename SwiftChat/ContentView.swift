@@ -23,7 +23,8 @@ struct ContentView: View {
     @State private var prompt = "Write a poem about Valencia\n"
     @State private var modelURL: URL? = nil
     @State private var languageModel: LanguageModel? = nil
-    
+    @State private var isShowingChatView = false
+
     @State private var status: ModelState = .noModel
     @State private var outputText: AttributedString = ""
     
@@ -169,25 +170,16 @@ struct ContentView: View {
         .navigationTitle("Language Model Tester")
     }
     
-    @State
-    private var isShowingChatView = false
-    
     var body: some View {
         NavigationSplitView {
             VStack {
                 ControlView(prompt: prompt, config: $config, model: $languageModel, modelURL: $modelURL)
 #if os(iOS)
-                if status == .ready(nil) {
-                    Button("Start Chatting") {
-                        isShowingChatView = true
-                    }
-                    .padding()
-                } else {
-                    StatusView(status: $status)
+                Button("Start Chatting") {
+                    isShowingChatView = true
                 }
-#else
-                StatusView(status: $status)
 #endif
+                StatusView(status: $status)
             }
             .navigationSplitViewColumnWidth(min: 250, ideal: 300)
             .navigationDestination(isPresented: $isShowingChatView) {
