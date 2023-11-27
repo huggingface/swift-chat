@@ -177,7 +177,7 @@ struct ContentView: View {
         }.onAppear {
             modelDidChange()
         }
-        .onChange(of: modelURL) { _, _ in
+        .onChange(of: modelURL) {
             modelDidChange()
         }
     }
