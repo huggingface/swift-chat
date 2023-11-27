@@ -15,6 +15,11 @@ class ModelLoader {
         
     static func load(url: URL?) async throws -> LanguageModel {
         if let url = url {
+            
+            guard url.startAccessingSecurityScopedResource() else {
+                fatalError("Failed to access the model file due to security restrictions. Please ensure the app has the necessary permissions and the file is not in a restricted location.")
+            }
+            
             print("Compiling model \(url)")
             let compiledURL = try await MLModel.compileModel(at: url)
             
@@ -26,6 +31,7 @@ class ModelLoader {
             
             // Create symlink (alternative: store name in UserDefaults)
             try compiledPath.symlink(as: lastCompiledModel)
+            url.stopAccessingSecurityScopedResource()
         }
         
         // Load last model used (or the one we just compiled)
