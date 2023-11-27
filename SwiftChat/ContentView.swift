@@ -161,7 +161,7 @@ struct ContentView: View {
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(Color.gray.opacity(0.5), lineWidth: 1)
                             )
-                            .onChange(of: clearTriggered) { _, _ in
+                            .onChange(of: clearTriggered) {
                                 clear()
                             }
                     }
