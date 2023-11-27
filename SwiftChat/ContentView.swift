@@ -19,12 +19,18 @@ enum ModelState: Equatable {
 }
 
 struct ContentView: View {
+    
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    
     @State private var config = GenerationConfig(maxNewTokens: 20)
     @State private var prompt = "Write a poem about Valencia\n"
     @State private var modelURL: URL? = nil
     @State private var languageModel: LanguageModel? = nil
-    @State private var isShowingChatView = false
-
+    
+    @State private var isSettingsPresented = false
+    @State private var isFirstLaunch = true
+    
     @State private var status: ModelState = .noModel
     @State private var outputText: AttributedString = ""
     
@@ -39,7 +45,7 @@ struct ContentView: View {
                 languageModel = try await ModelLoader.load(url: modelURL)
                 if let config = languageModel?.defaultGenerationConfig { self.config = config }
                 status = .ready(nil)
-                isShowingChatView = true
+                isSettingsPresented = false
             } catch {
                 print("No model could be loaded: \(error)")
                 status = .noModel
@@ -170,24 +176,73 @@ struct ContentView: View {
         .navigationTitle("Language Model Tester")
     }
     
-    var body: some View {
+    var regularView: some View {
         NavigationSplitView {
             VStack {
                 ControlView(prompt: prompt, config: $config, model: $languageModel, modelURL: $modelURL)
-#if os(iOS)
-                Button("Start Chatting") {
-                    isShowingChatView = true
-                }
-#endif
                 StatusView(status: $status)
             }
             .navigationSplitViewColumnWidth(min: 250, ideal: 300)
-            .navigationDestination(isPresented: $isShowingChatView) {
-                chatView
-            }
         } detail: {
             chatView
-        }.onAppear {
+        }
+    }
+    
+#if os(iOS)
+    var compactView: some View {
+        NavigationView {
+            VStack {
+                chatView
+                StatusView(status: $status)
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Settings", systemImage: "gear") {
+                        isSettingsPresented = true
+                    }
+                }
+            }
+        }
+        .onAppear {
+            if isFirstLaunch {
+                isSettingsPresented = true
+                isFirstLaunch = false
+            }
+        }
+        .sheet(isPresented: $isSettingsPresented) {
+            NavigationView {
+                VStack {
+                    ControlView(prompt: prompt, config: $config, model: $languageModel, modelURL: $modelURL)
+                    StatusView(status: $status)
+                }
+                .navigationTitle("Settings")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            isSettingsPresented = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+#endif
+    
+    var body: some View {
+        Group {
+#if os(iOS)
+            if horizontalSizeClass == .compact && (verticalSizeClass == .compact || verticalSizeClass == .regular) {
+                compactView
+            } else {
+                regularView
+            }
+#else
+            regularView
+#endif
+        }
+        .onAppear {
             modelDidChange()
         }
         .onChange(of: modelURL) {
