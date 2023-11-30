@@ -14,11 +14,10 @@ class ModelLoader {
     static let lastCompiledModel = models / "last-model.mlmodelc"
         
     static func load(url: URL?) async throws -> LanguageModel {
-        defer {
-            url?.stopAccessingSecurityScopedResource()
-        }
-        
         if let url = url, url.startAccessingSecurityScopedResource() {
+            defer {
+                url.stopAccessingSecurityScopedResource()
+            }
             print("Compiling model \(url)")
             let compiledURL = try await MLModel.compileModel(at: url)
             
