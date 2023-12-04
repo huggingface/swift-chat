@@ -162,5 +162,4 @@ struct ControlView: View {
 private extension UTType {
     static let mlpackage = UTType(filenameExtension: "mlpackage", conformingTo: .item)!
     static let mlmodelc = UTType(filenameExtension: "mlmodelc", conformingTo: .item)!
-    static let mlmodel = UTType(filenameExtension: "mlmodel", conformingTo: .item)!
 }
