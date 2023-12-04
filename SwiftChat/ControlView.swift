@@ -136,7 +136,7 @@ struct ControlView: View {
                         .controlSize(.large)
                         .frame(maxWidth: .infinity)
                         .cornerRadius(5)
-                        .fileImporter(isPresented: $showFilePicker, allowedContentTypes: [.mlpackage, .mlmodelc, .mlmodel], allowsMultipleSelection: false) { result in
+                        .fileImporter(isPresented: $showFilePicker, allowedContentTypes: [.mlpackage, .mlmodelc], allowsMultipleSelection: false) { result in
                             switch result {
                             case .success(let urls):
                                 modelURL = urls.first
