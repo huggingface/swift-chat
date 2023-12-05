@@ -18,8 +18,11 @@ class ModelLoader {
             try models.delete()
             try ModelLoader.models.mkdir(.p)
         }
-
-        if let url = url {
+            
+        if let url = url, url.startAccessingSecurityScopedResource() {
+            defer {
+                url.stopAccessingSecurityScopedResource()
+            }
             let compiledPath = models / url.deletingPathExtension().appendingPathExtension("mlmodelc").lastPathComponent
             if url.pathExtension == "mlmodelc" {
                 // _copy_ to the models folder
