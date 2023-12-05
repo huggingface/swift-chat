@@ -14,19 +14,25 @@ class ModelLoader {
     static let lastCompiledModel = models / "last-model.mlmodelc"
         
     static func load(url: URL?) async throws -> LanguageModel {
-        if let url = url, url.startAccessingSecurityScopedResource() {
-            defer {
-                url.stopAccessingSecurityScopedResource()
-            }
-            print("Compiling model \(url)")
-            let compiledURL = try await MLModel.compileModel(at: url)
-            
-            // Cache compiled (keep last one only)
+        func clearModels() throws {
             try models.delete()
-            let compiledPath = models / url.deletingPathExtension().appendingPathExtension("mlmodelc").lastPathComponent
             try ModelLoader.models.mkdir(.p)
-            try Path(url: compiledURL)?.move(to: compiledPath, overwrite: true)
-            
+        }
+
+        if let url = url {
+            let compiledPath = models / url.deletingPathExtension().appendingPathExtension("mlmodelc").lastPathComponent
+            if url.pathExtension == "mlmodelc" {
+                // _copy_ to the models folder
+                try clearModels()
+                try Path(url: url)?.copy(to: compiledPath, overwrite: true)
+            } else {
+                // Compile and _move_
+                print("Compiling model \(url)")
+                let compiledURL = try await MLModel.compileModel(at: url)
+                try clearModels()
+                try Path(url: compiledURL)?.move(to: compiledPath, overwrite: true)
+            }
+
             // Create symlink (alternative: store name in UserDefaults)
             try compiledPath.symlink(as: lastCompiledModel)
         }
