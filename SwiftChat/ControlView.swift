@@ -9,6 +9,7 @@ import SwiftUI
 import CompactSlider
 import Models
 import Generation
+import UniformTypeIdentifiers
 
 struct ControlView: View {
     var prompt: String = ""
@@ -135,9 +136,7 @@ struct ControlView: View {
                         .controlSize(.large)
                         .frame(maxWidth: .infinity)
                         .cornerRadius(5)
-                        
-                        // TODO: only allow .mlpackage (or .mlmodelc)
-                        .fileImporter(isPresented: $showFilePicker, allowedContentTypes: [.item], allowsMultipleSelection: false) { result in
+                        .fileImporter(isPresented: $showFilePicker, allowedContentTypes: [.mlpackage, .mlmodelc], allowsMultipleSelection: false) { result in
                             switch result {
                             case .success(let urls):
                                 modelURL = urls.first
@@ -158,4 +157,9 @@ struct ControlView: View {
         }
         .padding()
     }
+}
+
+private extension UTType {
+    static let mlpackage = UTType(filenameExtension: "mlpackage", conformingTo: .item)!
+    static let mlmodelc = UTType(filenameExtension: "mlmodelc", conformingTo: .item)!
 }
