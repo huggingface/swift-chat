@@ -160,6 +160,6 @@ struct ControlView: View {
 }
 
 private extension UTType {
-    static let mlpackage = UTType(filenameExtension: "mlpackage", conformingTo: .item)!
-    static let mlmodelc = UTType(filenameExtension: "mlmodelc", conformingTo: .item)!
+    static let mlpackage = UTType(importedAs: "com.huggingface.mlpackage")
+    static let mlmodelc = UTType(importedAs: "com.huggingface.mlmodelc")
 }
