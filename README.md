@@ -1,4 +1,8 @@
-# Swift Chat and Language Model Tester
+# Swift Chat and Language Model Tester – preview edition
+
+The `preview` branch is configured to run with the `preview` branch of [`swift-transformers`](https://github.com/huggingface/swift-transformers/tree/preview), which is an experimental branch that supports cutting edge features released at WWDC 2024.
+
+---
 
 This is a small app that shows how to integrate [`swift-transformers`](https://github.com/huggingface/swift-transformers) in a Swift app.
 
