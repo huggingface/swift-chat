@@ -72,6 +72,7 @@ struct ControlView: View {
                             Text("\(Int(config.maxNewTokens))")
                         }
                         .compactSliderSecondaryColor(.blue)
+                        .disabled(model == nil)
                         .help("The maximum number of tokens to generate. Requests can use up to 2,048 tokens shared between prompt and completion. The exact limit varies by model. (One token is roughly 4 characters for normal English text)")
                     } label: {
                        HStack {
