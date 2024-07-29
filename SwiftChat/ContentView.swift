@@ -43,7 +43,14 @@ struct ContentView: View {
         Task.init {
             do {
                 languageModel = try await ModelLoader.load(url: modelURL)
-                if let config = languageModel?.defaultGenerationConfig { self.config = config }
+                if let config = languageModel?.defaultGenerationConfig {
+                    let maxNewTokens = self.config.maxNewTokens
+                    self.config = config
+                    Task.init {
+                        // Refresh after slider limits have been updated
+                        self.config.maxNewTokens = min(maxNewTokens, languageModel?.maxContextLength ?? 20)
+                    }
+                }
                 status = .ready(nil)
                 isSettingsPresented = false
             } catch {
